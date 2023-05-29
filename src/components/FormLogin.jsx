@@ -1,16 +1,12 @@
-import { useTheme } from "@emotion/react";
-import styled from "@emotion/styled";
-import { Box, Card, CardContent, CardMedia, Container, TextField, Typography, InputLabel, Button, Stack, useMediaQuery, Paper } from "@mui/material";
+import { Box, CardContent, CardMedia, Container, TextField, Typography, InputLabel, Button, Stack, Paper } from "@mui/material";
 import axios from "axios";
 import { Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Router from "next/router";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import CardCover from '@mui/joy/CardCover';
-
 
 const validationSchema = yup.object({
   username: yup
@@ -26,9 +22,11 @@ const validationSchema = yup.object({
 
 
 const FormLogin = () => {
-
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleShowPassword = () => setShowPassword(!showPassword)
 
   return (
     <>
@@ -111,7 +109,7 @@ const FormLogin = () => {
                     </InputLabel>
                     <TextField
                       placeholder="abcde12345"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       name="password"
                       value={values.password}
@@ -120,6 +118,13 @@ const FormLogin = () => {
                       error={touched.password && Boolean(errors.password)}
                       helperText={touched.password && errors.password}
                     />
+                    {!!values.password && (
+                      <Box style={{marginTop: 0}} sx={{ justifyContent: 'end', display: 'flex' }}>
+                        <Button onClick={handleShowPassword} size="small" variant="text" color="brand">
+                          {showPassword ? "Ocultar" : "Mostrar"} contraseña
+                        </Button>
+                      </Box>
+                    )}
                     <Button 
                       color="brand" 
                       type="submit" 

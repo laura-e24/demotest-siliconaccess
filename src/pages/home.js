@@ -1,15 +1,12 @@
 import HomeSkeleton from '@/components/HomeSkeleton';
-import { Button, Container, Divider, Stack, Typography, CardMedia } from '@mui/material';
+import { Button, Stack, Typography, CardMedia } from '@mui/material';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Router from 'next/router';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import Link from '@mui/material/Link';
-import { AspectRatio, CardOverflow, Grid, IconButton } from '@mui/joy';
-import Favorite from '@mui/icons-material/Favorite';
-import {  Card } from "@mui/material";
+import { Grid } from '@mui/joy';
 import GradeIcon from '@mui/icons-material/Grade';
 import Fab from '@mui/material/Fab';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -47,12 +44,30 @@ const Home = () => {
       const auth = JSON.parse(localStorage.getItem('auth'))
       setUser(auth)
     }
-    setTimeout(() => setIsLoading(false), 1000)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
   }, [])
 
   return (  
+   <>
+    <style>
+      {`
+        .img-size {
+          width: 210px;
+          height: 118px;
+        }
+        @media(max-width: 767px) {
+          .img-size {
+            width: 100%;
+            height: 200px;
+          }
+        }
+      `}
+    </style>
     <main style={{ height: '100vh' }}>
-      <Box component="div"
+      <Box 
+        component="div"
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -63,30 +78,38 @@ const Home = () => {
           }
         }}
       >
-        <Paper elevation={3}>
+        <Paper 
+          sx={{ 
+            overflowY: 'auto', 
+            '@media(max-width: 767px)': {
+              width: '100%'
+            } 
+          }} 
+          elevation={3}
+        >
           <CardMedia
             sx={{ height: 140 }}
             image="/banner.png"
             title="Delivery now banner"
           />
-          <Box mt={10}>
+          <Box>
             <Stack flexWrap="wrap" display="flex" height="100%" alignContent="center" justifyContent="center" sx={{ width: '100%'}}>
               {!isLoading ? (
                 user ? (
                   <>
-                  <Box sx={{ position: 'absolute', top: 0, left: 0, marginLeft: 2, marginTop: 2 }}>
-                    <Fab 
-                      onClick={() => {
-                        if (typeof window !== 'undefined') localStorage.removeItem('auth');
-                        Router.push('/')
-                      }} 
-                      color="brand" aria-label="add"
-                      sx={{ background: 'linear-gradient(to right bottom, #d5273e, #e0283c, #ea2a39, #f52d35, #ff3131)' }}
-                    >
-                      <LogoutIcon />
-                    </Fab>
-                  </Box>
-                    <Typography align="center" gutterBottom variant="h5" component="div">
+                    <Box sx={{ position: 'absolute', top: 0, left: 0, marginLeft: 2, marginTop: 2 }}>
+                      <Fab 
+                        onClick={() => {
+                          if (typeof window !== 'undefined') localStorage.removeItem('auth');
+                          Router.push('/')
+                        }} 
+                        color="brand" aria-label="add"
+                        sx={{ background: 'linear-gradient(to right bottom, #d5273e, #e0283c, #ea2a39, #f52d35, #ff3131)' }}
+                      >
+                        <LogoutIcon />
+                      </Fab>
+                    </Box>
+                    <Typography mt={4} align="center" gutterBottom variant="h5" component="div">
                       ¡Hola, {user?.first_name} {user?.last_name}!
                     </Typography>
                     <Typography align="center" mb={2} variant="body1" color="secondary">
@@ -95,18 +118,30 @@ const Home = () => {
                     <Typography align="center" mb={2} variant="body1" color="secondary">
                       Estos son algunos de los restaurantes cerca tuyo
                     </Typography>
-                    <Grid sx={{ 
-                      gridColumn: 3
-                     }} px={2} container wrap="wrap">
+                    <Grid px={2} container wrap="wrap">
                       {data.map((item, index) => (
-                        <Box key={index} sx={{ width: 210, marginRight: 0.5, my: 5,
-                          '&:hover': {
-                            background: '#eeeee4',
-                            cursor: 'pointer'
-                          }}}
+                        <Box 
+                          key={index} 
+                          sx={{  
+                            marginRight: 0.5, 
+                            my: 5,
+                            '@media(max-width: 767px)': {
+                              width: '100%',
+                              height: 200,
+                              my: 6
+                            },
+                            '&:hover': {
+                              background: '#eeeee4',
+                              cursor: 'pointer'
+                            },
+                            '&:last-child': {
+                              marginRight: 0
+                            },
+                            width: 210
+                          }}
                         >
                           <img
-                            style={{ width: 210, height: 118 }}
+                            className='img-size'
                             alt={item.name}
                             src={item.src}
                           />
@@ -130,21 +165,19 @@ const Home = () => {
                     </Grid>
                   </>
                 ) : (
-                  <>
+                  <Box p={5}>
                     <Alert severity="error">
                       <AlertTitle>Error: No autorizado</AlertTitle>
                       Inicie sesión para visualizar esta página
                     </Alert>
-                    <Box marginX="auto" alignContent="end">
-                      <Button  
-                        sx={{ marginTop: 2 }} 
-                        variant='outlined'
-                        onClick={() => Router.push('/')}
-                      >
-                        Iniciar sesión
-                      </Button>
-                    </Box>
-                  </>
+                    <Button  
+                      sx={{ marginX: 'auto', display: 'block', mt: 2 }} 
+                      variant='outlined'
+                      onClick={() => Router.push('/')}
+                    >
+                      Iniciar sesión
+                    </Button>
+                  </Box>
                 )
               ) : <HomeSkeleton />}
             </Stack>
@@ -152,6 +185,7 @@ const Home = () => {
         </Paper>
       </Box>
     </main>
+   </>
   );
 }
  
