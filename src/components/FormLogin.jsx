@@ -30,25 +30,8 @@ const FormLogin = () => {
 
   return (
     <>
-      <style>
-        {`
-          @media(min-width: 1024px) {
-            .card {
-              max-width: 50%;
-            }
-            .box {
-              width: 75%;
-            }
-          }
-          @media(max-width: 1024px) {
-            .container {
-              padding: 0;
-            }
-          }
-        `}
-      </style>
-      <Container className="container" sx={{ height: '100vh'}}>
-        <Paper className="card" sx={{ margin: "auto", height: '100%', overflowY: 'auto' }}>
+      <Container sx={{ height: '100vh', alignContent: 'center', display: 'flex'}}>
+        <Paper sx={{ margin: "auto", paddingBottom: 8, overflowY: 'auto' }}>
           <CardMedia
             sx={{ height: 140 }}
             image="/banner.png"
